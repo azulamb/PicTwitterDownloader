@@ -40,14 +40,20 @@ class AnalysisPicTwitter
 			HashMap<String,Integer> add = new HashMap<String,Integer>();
 			BufferedReader br = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
 			String line = "";
-			Pattern p = Pattern.compile( ".*data-url=\"(https://pbs.twimg.com/media/.+?)(:large)*\".*" );
+			Pattern p = Pattern.compile( ".*(data-url|video-src)=\"(https://pbs.twimg.com/.+?/.+?)(:large)*\".*" );
+			Pattern t = Pattern.compile( "(mp4)$" );
 			Matcher m;
 			while ( (line = br.readLine() ) != null)
 			{
 				m = p.matcher( line );
 				if (m.matches())
 				{
-					line = m.group( 1 ) + ":large";
+					line = m.group( 2 );
+					m = t.matcher( line );
+					if ( ! m.matches() )
+					{
+						line += ":large";
+					}
 					System.out.println( line );
 					add.put( line, 0 );
 				}

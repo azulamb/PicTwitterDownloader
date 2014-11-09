@@ -31,17 +31,23 @@ class DownloadPicture
 		{
 			URL url = new URL( address );
 
-			Pattern p = Pattern.compile( "http.+/(.+):large.*" );
+			Pattern p = Pattern.compile( "http.+/(.+):large" );
 			Matcher m = p.matcher( address );
 			String filename;
 			if ( ! m.matches() )
 			{
-				System.out.println("error");
-				return false;
+				p = Pattern.compile( "http.+/(.+\\.mp4)$" );
+				m = p.matcher( address );
+				if ( ! m.matches() )
+				{
+					System.out.println("error");
+					return false;
+				}
 			}
 
 			filename = "img" + File.separator + m.group( 1 );
 
+			System.out.println( "Save:" + filename );
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setAllowUserInteraction(false);
 			conn.setInstanceFollowRedirects(true);
@@ -50,6 +56,7 @@ class DownloadPicture
 
 			int httpStatusCode = conn.getResponseCode();
 			if(httpStatusCode != HttpURLConnection.HTTP_OK){
+				System.out.println( "Download error." );
 				return true;
 			}
 
@@ -71,11 +78,14 @@ class DownloadPicture
 		} catch (FileNotFoundException e)
 		{
 			e.printStackTrace();
-		} catch (ProtocolException e) {
+		} catch (ProtocolException e)
+		{
 			e.printStackTrace();
-		} catch (MalformedURLException e) {
+		} catch (MalformedURLException e)
+		{
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (IOException e)
+		{
 			e.printStackTrace();
 		}
 		return true;
