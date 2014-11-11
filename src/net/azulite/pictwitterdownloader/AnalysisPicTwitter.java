@@ -41,7 +41,7 @@ class AnalysisPicTwitter
 			BufferedReader br = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
 			String line = "";
 			Pattern p = Pattern.compile( ".*(data-url|video-src)=\"(https://pbs.twimg.com/.+?/.+?)(:large)*\".*" );
-			Pattern t = Pattern.compile( "(mp4)$" );
+			Pattern t = Pattern.compile( ".+mp4$" );
 			Matcher m;
 			while ( (line = br.readLine() ) != null)
 			{
