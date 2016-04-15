@@ -40,7 +40,7 @@ class AnalysisPicTwitter
 			HashMap<String,Integer> add = new HashMap<String,Integer>();
 			BufferedReader br = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
 			String line = "", type = "", durl = "";
-			Pattern p = Pattern.compile( ".*(data-url|video-src)=\"(https://pbs.twimg.com/.+?/.+?)(:large)*\".*" );
+			Pattern p = Pattern.compile( ".*data-image-url=\"(https://pbs.twimg.com/.+?/.+?)(:large)*\".*" );
 			Pattern v = Pattern.compile( ".*background-image:url\\('https://pbs.twimg.com/([^/]+)/(.*)\\.jpg'\\).*" );
 			Pattern t = Pattern.compile( ".+mp4$" );
 			Matcher m;
@@ -52,7 +52,10 @@ class AnalysisPicTwitter
 				if ( m.matches() ){
 					type = m.group( 1 );
 					if ( type.equals( "tweet_video_thumb" ) ){
+						add.clear();
 						durl = "https://pbs.twimg.com/tweet_video/" + m.group( 2 ) + ".mp4";
+						System.out.println( durl );
+						add.put( durl, 0 );
 						break;
 					}
 				}
@@ -60,20 +63,17 @@ class AnalysisPicTwitter
 				m = p.matcher( line );
 				if ( m.matches() )
 				{
-					durl = m.group( 2 );
+					durl = m.group( 1 );
 					m = t.matcher( durl );
 					if ( ! m.matches() )
 					{
 						durl += ":large";
+						System.out.println( durl );
+						add.put( durl, 0 );
 					}
 				}
 			}
 			br.close();
-
-			if ( durl != "" ){
-				System.out.println( durl );
-				add.put( durl, 0 );
-			}
 
 			if ( add.size() <= 0  ){ return new String[0];}
 			ArrayList<String> list = new ArrayList<String>();
