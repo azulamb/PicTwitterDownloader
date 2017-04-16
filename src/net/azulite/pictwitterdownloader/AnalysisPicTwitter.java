@@ -15,8 +15,9 @@ class AnalysisPicTwitter
 {
 	public static String[] analysis( String address )
 	{
-		try {
-			URL url = new URL( address );
+		try
+		{
+			URL url = new URL( address.replace( "mobile.twitter.com", "twitter.com" ) );
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setAllowUserInteraction( false );
 			conn.setInstanceFollowRedirects( true );
@@ -41,7 +42,7 @@ class AnalysisPicTwitter
 			BufferedReader br = new BufferedReader( new InputStreamReader( conn.getInputStream() ));
 			String line = "", type = "", durl = "";
 			Pattern p = Pattern.compile( ".*data-image-url=\"(https://pbs.twimg.com/.+?/.+?)(:large)*\".*" );
-			Pattern v = Pattern.compile( ".*background-image:url\\('https://pbs.twimg.com/([^/]+)/(.*)\\.jpg'\\).*" );
+			Pattern v = Pattern.compile( ".*background-image:url\\('https://pbs.twimg.com/([^/]+)/(.*)\\.jpg.*" );
 			Pattern t = Pattern.compile( ".+mp4$" );
 			Matcher m;
 
@@ -52,11 +53,11 @@ class AnalysisPicTwitter
 				if ( m.matches() ){
 					type = m.group( 1 );
 					if ( type.equals( "tweet_video_thumb" ) ){
-						add.clear();
+						//add.clear();
 						durl = "https://pbs.twimg.com/tweet_video/" + m.group( 2 ) + ".mp4";
 						System.out.println( durl );
 						add.put( durl, 0 );
-						break;
+						//break;
 					}
 				}
 
